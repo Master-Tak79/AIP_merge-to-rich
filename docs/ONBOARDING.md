@@ -13,7 +13,7 @@ GitHub 저장소에서 프로젝트를 클론하고 의존성을 설치합니다
 
 ```bash
 # 1. 저장소 클론
-git clone https://github.com/purple790779/AIP_merge-to-rich.git
+git clone https://github.com/Master-Tak79/AIP_merge-to-rich.git
 
 # 2. 프로젝트 디렉토리 이동
 cd AIP_merge-to-rich

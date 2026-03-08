@@ -173,7 +173,7 @@ interface GameStore {
 - **구현**:
   - `vite-plugin-pwa` 적용: `manifest.webmanifest` 및 `sw.js` 자동 생성
   - `vite-env.d.ts` 추가: TypeScript 타입 에러 해결 (`virtual:pwa-register`)
-  - **결과**: `https://purple790779.github.io/AIP_merge-to-rich/` 접속 시 설치 프롬프트 활성화
+  - **결과**: `https://master-tak79.github.io/AIP_merge-to-rich/` 접속 시 설치 프롬프트 활성화
 
 ### 8.2 GitHub Actions를 이용한 안드로이드 클라우드 빌드
 - **문제**: 로컬 환경에 Android SDK 및 JDK 설정 부재로 빌드 실패
