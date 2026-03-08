@@ -82,6 +82,7 @@ $env:VITE_ENABLE_PWA='false'; npm run build
 - **[시스템 아키텍처 및 로직 `docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**: React, Zustand, 상태 로직 분석
 - **[에셋 자동화 및 AI 에이전트 지침 `docs/ASSET_GUIDE.md`](docs/ASSET_GUIDE.md)**: 저작권 우회를 위한 AI 기반 에셋 자동화 가이드
 - **[신규 게임 템플릿화 구축 `docs/TEMPLATE_GUIDE.md`](docs/TEMPLATE_GUIDE.md)**: 현재 프로젝트 기반의 보일러플레이트 구축 가이드
+- **[복귀 보상 설계 문서 `docs/RETURN_REWARD_PLAN.md`](docs/RETURN_REWARD_PLAN.md)**: 복귀/컴백 보상 규칙, 악용 방지, 구현 메모
 
 ### 히스토리 및 기타
 - 변경 이력: `docs/CHANGELOG.md`
