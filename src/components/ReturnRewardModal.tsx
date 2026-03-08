@@ -36,6 +36,11 @@ export function ReturnRewardModal({ onClose, onDismiss }: ReturnRewardModalProps
         onClose();
     };
 
+    const handleDismiss = () => {
+        if (!window.confirm('복귀 보상을 버리면 복구할 수 없습니다. 계속할까요?')) return;
+        onDismiss();
+    };
+
     return (
         <motion.div className="modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
             <motion.div
@@ -82,8 +87,8 @@ export function ReturnRewardModal({ onClose, onDismiss }: ReturnRewardModalProps
                     <button className="toss-button secondary" onClick={onClose}>
                         나중에 받기
                     </button>
-                    <button className="toss-button danger" onClick={onDismiss}>
-                        버리기
+                    <button className="toss-button danger" onClick={handleDismiss}>
+                        버리기(복구 불가)
                     </button>
                     <button className="toss-button gold" onClick={handleClaim}>
                         보상 받기
