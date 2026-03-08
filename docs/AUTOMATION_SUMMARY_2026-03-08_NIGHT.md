@@ -66,3 +66,10 @@
 ### 6-6) local commits created (continuation)
 - `f0b9478` feat: tune timed rewards and clarify korean retention guidance
 - `1c924db` feat: safeguard timed reward dismiss actions
+- `5c4ea53` docs: sync continuation reward tuning and validation summary
+
+## 7) final wrap-up
+- 22:51 KST 기준 사용자 요청에 따라 오늘 추가 기능 작업은 종료했습니다.
+- 22:30 이후에는 새 기능 확장 대신 최종 상태 확인과 문서 정리만 수행했습니다.
+- 현재 기준 최종 확인 상태는 `npm run lint` ✅ / `npm run build` ✅ 입니다.
+- 원격 push는 하지 않았고, 오늘 변경은 로컬 상태로 유지합니다.
