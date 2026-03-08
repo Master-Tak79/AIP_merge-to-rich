@@ -1,37 +1,37 @@
-// 코인 타입 정의
 export interface Coin {
     id: string;
     level: number;
     gridIndex: number;
 }
 
-// 머지 단계표 (한국 화폐 단위 → 보석 → 비트코인)
-export const COIN_LEVELS: Record<number, { name: string; value: number; emoji: string }> = {
-    // 화폐 단계 (1-12)
-    1: { name: '10원', value: 10, emoji: '🪙' },
-    2: { name: '50원', value: 50, emoji: '🪙' },
-    3: { name: '100원', value: 100, emoji: '💿' },
-    4: { name: '500원', value: 500, emoji: '🥇' },
-    5: { name: '1,000원', value: 1000, emoji: '💵' },
-    6: { name: '5,000원', value: 5000, emoji: '💴' },
-    7: { name: '10,000원', value: 10000, emoji: '💶' },
-    8: { name: '50,000원', value: 50000, emoji: '💷' },
-    9: { name: '수표', value: 100000, emoji: '📄' },
-    10: { name: '금괴', value: 500000, emoji: '🥇' },
-    11: { name: '다이아', value: 1000000, emoji: '💎' },
-    12: { name: '토스 빌딩', value: 10000000, emoji: '🏢' },
-    // 보석 단계 (13-17) - 업그레이드로 해금
-    13: { name: '루비', value: 50000000, emoji: '🔴' },
-    14: { name: '사파이어', value: 100000000, emoji: '🔵' },
-    15: { name: '에메랄드', value: 500000000, emoji: '🟢' },
-    16: { name: '블랙 다이아', value: 1000000000, emoji: '⚫' },
-    17: { name: '우주석', value: 5000000000, emoji: '🌌' },
-    // 비트코인 (18) - 히든
-    18: { name: '비트코인', value: 100000000000, emoji: '₿' },
+export interface CoinLevel {
+    name: string;
+    value: number;
+    emoji: string;
+}
+
+export const COIN_LEVELS: Record<number, CoinLevel> = {
+    1: { name: '10원', value: 10, emoji: '₩10' },
+    2: { name: '50원', value: 50, emoji: '₩50' },
+    3: { name: '100원', value: 100, emoji: '₩100' },
+    4: { name: '500원', value: 500, emoji: '₩500' },
+    5: { name: '1,000원', value: 1_000, emoji: '💵' },
+    6: { name: '5,000원', value: 5_000, emoji: '💴' },
+    7: { name: '10,000원', value: 10_000, emoji: '💶' },
+    8: { name: '50,000원', value: 50_000, emoji: '💷' },
+    9: { name: '수표', value: 100_000, emoji: '🧾' },
+    10: { name: '금괴', value: 500_000, emoji: '🥇' },
+    11: { name: '다이아', value: 1_000_000, emoji: '💎' },
+    12: { name: '토스 빌딩', value: 10_000_000, emoji: '🏢' },
+    13: { name: '루비', value: 50_000_000, emoji: '♦️' },
+    14: { name: '사파이어', value: 100_000_000, emoji: '🔷' },
+    15: { name: '에메랄드', value: 500_000_000, emoji: '💚' },
+    16: { name: '블랙 다이아', value: 1_000_000_000, emoji: '🖤' },
+    17: { name: '우주석', value: 5_000_000_000, emoji: '🌙' },
+    18: { name: '비트코인', value: 100_000_000_000, emoji: '₿' },
 };
 
-// 레벨별 초당 수익 (PPS: Profit Per Second)
-export const COIN_PPS: Record<number, number> = {
+export const COIN_BASE_INCOME: Record<number, number> = {
     1: 1,
     2: 3,
     3: 8,
@@ -39,126 +39,138 @@ export const COIN_PPS: Record<number, number> = {
     5: 50,
     6: 150,
     7: 400,
-    8: 1000,
-    9: 3000,
-    10: 10000,
-    11: 50000,
-    12: 200000,
-    // 보석 단계
-    13: 1000000,
-    14: 5000000,
-    15: 20000000,
-    16: 100000000,
-    17: 500000000,
-    // 비트코인
-    18: 10000000000,
+    8: 1_000,
+    9: 3_000,
+    10: 10_000,
+    11: 50_000,
+    12: 200_000,
+    13: 1_000_000,
+    14: 5_000_000,
+    15: 20_000_000,
+    16: 100_000_000,
+    17: 500_000_000,
+    18: 10_000_000_000,
 };
 
-// 그리드 상수
 export const GRID_SIZE = 5;
 export const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
-
-// 업그레이드 타입
-export interface Upgrade {
-    id: string;
-    name: string;
-    description: string;
-    cost: number;
-    level: number;
-    maxLevel: number;
-}
 
 export type BoostType = 'AUTO_MERGE' | 'DOUBLE_INCOME' | 'AUTO_SPAWN';
 
 export interface ActiveBoost {
     type: BoostType;
-    endTime: number; // 타임스탬프
+    endTime: number;
 }
 
-// 게임 상태 타입
+export type RewardSource =
+    | 'passive_income'
+    | 'merge_bonus'
+    | 'daily_reward'
+    | 'return_reward'
+    | 'offline_reward'
+    | 'achievement_reward'
+    | 'monetization_bonus';
+
+export interface TimedRewardPreview {
+    source: Extract<RewardSource, 'return_reward' | 'offline_reward'>;
+    amount: number;
+    elapsedMs: number;
+    eligibleAt: number;
+    multiplier: number;
+}
+
 export interface GameState {
     coins: Coin[];
     totalMoney: number;
-    pps: number; // Profit Per Second (매 interval마다 지급)
-    spawnLevel: number; // 생성되는 코인의 기본 레벨
-    spawnCooldown: number; // 생성 쿨다운 (ms)
-    incomeInterval: number; // 수익 지급 간격 (ms), 기본 10000ms (10초)
-    mergeBonusLevel: number; // 머지 보너스 레벨 (레벨당 0.5%)
-    gemSystemUnlocked: boolean; // 보석 시스템 해금 여부
-    bitcoinDiscovered: boolean; // 비트코인 발견 여부
-    lastMergedId: string | null; // 마지막으로 머지된 코인 ID (애니메이션용)
-    activeBoosts: ActiveBoost[]; // 활성화된 부스트 목록
-    // 업적 시스템
-    unlockedAchievements: string[]; // 해금된 업적 ID 목록
-    totalMergeCount: number; // 총 합성 횟수
-    totalEarnedMoney: number; // 총 획득 금액 (누적)
-    discoveredLevels: number[]; // 첫 발견한 코인 레벨 목록
-    // 신규 업그레이드
-    incomeMultiplierLevel: number; // 수익 배율 레벨 (1.0 + level * 0.1)
-    autoMergeInterval: number; // 자동 병합 간격 (ms), 기본 5000ms
-    // 일일 보상
-    dailyRewardLastClaimAt: number | null; // 마지막 수령 시각
-    dailyRewardLastClaimDayKey: string | null; // 마지막 수령 KST 날짜 (YYYY-MM-DD)
-    dailyRewardStreak: number; // 연속 수령 일수
-    dailyRewardTotalClaimed: number; // 누적 수령 횟수
-    dailyRewardLastAmount: number; // 마지막 수령 금액
+    incomePerTick: number;
+    spawnLevel: number;
+    spawnCooldown: number;
+    incomeInterval: number;
+    mergeBonusLevel: number;
+    gemSystemUnlocked: boolean;
+    bitcoinDiscovered: boolean;
+    lastMergedId: string | null;
+    activeBoosts: ActiveBoost[];
+    unlockedAchievements: string[];
+    totalMergeCount: number;
+    totalEarnedMoney: number;
+    discoveredLevels: number[];
+    incomeMultiplierLevel: number;
+    autoMergeInterval: number;
+    dailyRewardLastClaimAt: number | null;
+    dailyRewardLastClaimDayKey: string | null;
+    dailyRewardStreak: number;
+    dailyRewardTotalClaimed: number;
+    dailyRewardLastAmount: number;
+    lastSeenAt: number;
+    lastSeenDayKey: string | null;
+    returnRewardLastEligibleAt: number | null;
+    returnRewardLastClaimAt: number | null;
+    returnRewardTotalClaimed: number;
+    pendingReturnReward: TimedRewardPreview | null;
+    offlineRewardLastClaimAt: number | null;
+    offlineRewardTotalClaimed: number;
+    pendingOfflineReward: TimedRewardPreview | null;
 }
 
-// 업적 타입 정의
 export interface Achievement {
     id: string;
     title: string;
     description: string;
     icon: string;
     condition: (state: GameState) => boolean;
-    reward?: number; // 보상 금액 (옵션)
+    reward?: number;
 }
 
-// 업적 목록
 export const ACHIEVEMENTS: Achievement[] = [
-    // 합성 관련
-    { id: 'first_merge', title: '첫 합성!', description: '처음으로 코인을 합성하세요', icon: '🎉', condition: (s) => s.totalMergeCount >= 1, reward: 100 },
-    { id: 'merge_10', title: '합성 초보', description: '코인을 10번 합성하세요', icon: '🔗', condition: (s) => s.totalMergeCount >= 10, reward: 500 },
-    { id: 'merge_50', title: '합성 중수', description: '코인을 50번 합성하세요', icon: '⛓️', condition: (s) => s.totalMergeCount >= 50, reward: 2000 },
-    { id: 'merge_100', title: '합성 고수', description: '코인을 100번 합성하세요', icon: '🏅', condition: (s) => s.totalMergeCount >= 100, reward: 5000 },
-    { id: 'merge_500', title: '합성 마스터', description: '코인을 500번 합성하세요', icon: '👑', condition: (s) => s.totalMergeCount >= 500, reward: 50000 },
-
-    // 자산 관련
-    { id: 'money_1k', title: '첫 천원', description: '총 자산 1,000원 달성', icon: '💵', condition: (s) => s.totalMoney >= 1000, reward: 100 },
-    { id: 'money_10k', title: '만원의 행복', description: '총 자산 10,000원 달성', icon: '💴', condition: (s) => s.totalMoney >= 10000, reward: 1000 },
-    { id: 'money_100k', title: '십만장자', description: '총 자산 100,000원 달성', icon: '💶', condition: (s) => s.totalMoney >= 100000, reward: 5000 },
-    { id: 'money_1m', title: '백만장자', description: '총 자산 1,000,000원 달성', icon: '💎', condition: (s) => s.totalMoney >= 1000000, reward: 50000 },
-    { id: 'money_10m', title: '천만장자', description: '총 자산 10,000,000원 달성', icon: '🏦', condition: (s) => s.totalMoney >= 10000000, reward: 500000 },
-    { id: 'money_100m', title: '억만장자', description: '총 자산 100,000,000원 달성', icon: '🏰', condition: (s) => s.totalMoney >= 100000000, reward: 5000000 },
-    { id: 'money_1b', title: '부자의 전당', description: '총 자산 1,000,000,000원 달성', icon: '🌟', condition: (s) => s.totalMoney >= 1000000000, reward: 50000000 },
-
-    // 레벨 관련
-    { id: 'level_5', title: '5단계 달성', description: '레벨 5 코인 획득', icon: '📈', condition: (s) => s.coins.some(c => c.level >= 5), reward: 500 },
-    { id: 'level_8', title: '8단계 달성', description: '레벨 8 코인 획득', icon: '📊', condition: (s) => s.coins.some(c => c.level >= 8), reward: 5000 },
-    { id: 'level_10', title: '금괴 획득', description: '금괴(레벨 10) 달성', icon: '🥇', condition: (s) => s.coins.some(c => c.level >= 10), reward: 50000 },
-    { id: 'level_12', title: '토스 빌딩 건설', description: '토스 빌딩(레벨 12) 달성', icon: '🏢', condition: (s) => s.coins.some(c => c.level >= 12), reward: 1000000 },
-
-    // 특별 업적
-    { id: 'gem_unlock', title: '보석 사냥꾼', description: '보석 시스템 해금', icon: '💠', condition: (s) => s.gemSystemUnlocked, reward: 10000000 },
-    { id: 'bitcoin', title: '전설의 비트코인', description: '비트코인 발견', icon: '₿', condition: (s) => s.bitcoinDiscovered, reward: 1000000000 },
-    { id: 'full_board', title: '보드 정복자', description: '보드를 코인으로 가득 채우기', icon: '🎯', condition: (s) => s.coins.length >= 25, reward: 1000 },
-    { id: 'spawn_level_5', title: '고급 생산자', description: '시작 레벨 5 달성', icon: '⬆️', condition: (s) => s.spawnLevel >= 5, reward: 10000 },
-    { id: 'spawn_level_10', title: '최고급 생산자', description: '시작 레벨 10 달성', icon: '🚀', condition: (s) => s.spawnLevel >= 10, reward: 500000 },
+    { id: 'first_merge', title: '첫 머지', description: '처음으로 코인을 머지하세요.', icon: '✨', condition: (state) => state.totalMergeCount >= 1, reward: 100 },
+    { id: 'merge_10', title: '머지 초보', description: '코인을 10번 머지하세요.', icon: '🧩', condition: (state) => state.totalMergeCount >= 10, reward: 500 },
+    { id: 'merge_50', title: '머지 중수', description: '코인을 50번 머지하세요.', icon: '⚙️', condition: (state) => state.totalMergeCount >= 50, reward: 2_000 },
+    { id: 'merge_100', title: '머지 고수', description: '코인을 100번 머지하세요.', icon: '🏆', condition: (state) => state.totalMergeCount >= 100, reward: 5_000 },
+    { id: 'merge_500', title: '머지 마스터', description: '코인을 500번 머지하세요.', icon: '👑', condition: (state) => state.totalMergeCount >= 500, reward: 50_000 },
+    { id: 'daily_7', title: '출석 루키', description: '일일 보상을 7회 수령하세요.', icon: '🗓️', condition: (state) => state.dailyRewardTotalClaimed >= 7, reward: 20_000 },
+    { id: 'daily_30', title: '출석 챔피언', description: '일일 보상을 30회 수령하세요.', icon: '📆', condition: (state) => state.dailyRewardTotalClaimed >= 30, reward: 200_000 },
+    { id: 'return_3', title: '복귀 단골', description: '복귀 보상을 3회 수령하세요.', icon: '🎁', condition: (state) => state.returnRewardTotalClaimed >= 3, reward: 80_000 },
+    { id: 'offline_10', title: '절전 고수', description: '오프라인 보상을 10회 정산하세요.', icon: '🌙', condition: (state) => state.offlineRewardTotalClaimed >= 10, reward: 120_000 },
+    { id: 'money_1k', title: '천 원의 시작', description: '자산 1,000원을 달성하세요.', icon: '💵', condition: (state) => state.totalMoney >= 1_000, reward: 100 },
+    { id: 'money_10k', title: '만원 돌파', description: '자산 10,000원을 달성하세요.', icon: '💴', condition: (state) => state.totalMoney >= 10_000, reward: 1_000 },
+    { id: 'money_100k', title: '십만 원 달성', description: '자산 100,000원을 달성하세요.', icon: '💶', condition: (state) => state.totalMoney >= 100_000, reward: 5_000 },
+    { id: 'money_1m', title: '백만장자', description: '자산 1,000,000원을 달성하세요.', icon: '💎', condition: (state) => state.totalMoney >= 1_000_000, reward: 50_000 },
+    { id: 'money_10m', title: '천만장자', description: '자산 10,000,000원을 달성하세요.', icon: '🏦', condition: (state) => state.totalMoney >= 10_000_000, reward: 500_000 },
+    { id: 'money_100m', title: '억대 자산가', description: '자산 100,000,000원을 달성하세요.', icon: '💰', condition: (state) => state.totalMoney >= 100_000_000, reward: 5_000_000 },
+    { id: 'money_1b', title: '부자의 문턱', description: '자산 1,000,000,000원을 달성하세요.', icon: '🤑', condition: (state) => state.totalMoney >= 1_000_000_000, reward: 50_000_000 },
+    { id: 'level_5', title: '고급 지폐', description: '레벨 5 코인을 보유하세요.', icon: '📈', condition: (state) => state.coins.some((coin) => coin.level >= 5), reward: 500 },
+    { id: 'level_8', title: '고액권 컬렉터', description: '레벨 8 코인을 보유하세요.', icon: '📊', condition: (state) => state.coins.some((coin) => coin.level >= 8), reward: 5_000 },
+    { id: 'level_10', title: '금괴 확보', description: '금괴를 발견하세요.', icon: '🥇', condition: (state) => state.coins.some((coin) => coin.level >= 10), reward: 50_000 },
+    { id: 'level_12', title: '토스 빌딩 도달', description: '토스 빌딩을 발견하세요.', icon: '🏢', condition: (state) => state.coins.some((coin) => coin.level >= 12), reward: 1_000_000 },
+    { id: 'gem_unlock', title: '보석 시장 개방', description: '보석 시스템을 해금하세요.', icon: '💠', condition: (state) => state.gemSystemUnlocked, reward: 10_000_000 },
+    { id: 'bitcoin', title: '전설의 비트코인', description: '비트코인을 발견하세요.', icon: '₿', condition: (state) => state.bitcoinDiscovered, reward: 1_000_000_000 },
+    { id: 'full_board', title: '보드 점령', description: '보드를 코인으로 가득 채우세요.', icon: '🧱', condition: (state) => state.coins.length >= TOTAL_CELLS, reward: 1_000 },
+    { id: 'spawn_level_5', title: '고급 생산자', description: '생성 레벨 5를 달성하세요.', icon: '🚀', condition: (state) => state.spawnLevel >= 5, reward: 10_000 },
+    { id: 'spawn_level_10', title: '최상위 생산자', description: '생성 레벨 10을 달성하세요.', icon: '🌟', condition: (state) => state.spawnLevel >= 10, reward: 500_000 },
     {
-        id: 'all_upgrades_max', title: '🏅 완벽주의자', description: '모든 업그레이드 최대 달성', icon: '🏅', condition: (s) =>
-            s.spawnLevel >= 11 &&
-            s.spawnCooldown <= 200 &&
-            s.incomeInterval <= 1000 &&
-            s.mergeBonusLevel >= 60 &&
-            s.gemSystemUnlocked &&
-            s.incomeMultiplierLevel >= 80 &&
-            s.autoMergeInterval <= 200,
-        reward: 1000000000
+        id: 'all_upgrades_max',
+        title: '완벽주의자',
+        description: '모든 업그레이드를 최대까지 달성하세요.',
+        icon: '🏁',
+        condition: (state) =>
+            state.spawnLevel >= 11 &&
+            state.spawnCooldown <= 200 &&
+            state.incomeInterval <= 1_000 &&
+            state.mergeBonusLevel >= 60 &&
+            state.gemSystemUnlocked &&
+            state.incomeMultiplierLevel >= 80 &&
+            state.autoMergeInterval <= 200,
+        reward: 1_000_000_000,
     },
-
-    // 최종 업적 (엔딩)
-    { id: 'max_money', title: '🏆 전설의 부자', description: '최대 자산 9999조원 달성! 게임 클리어!', icon: '🏆', condition: (s) => s.totalMoney >= 9999 * 1000000000000, reward: 0 },
+    {
+        id: 'max_money',
+        title: '끝없는 부',
+        description: '최대 자산 9,999조원을 달성하세요.',
+        icon: '🎉',
+        condition: (state) => state.totalMoney >= 9_999 * 1_000_000_000_000,
+        reward: 0,
+    },
 ];
 
-// 최대 자산 값 (9999조)
-export const MAX_MONEY = 9999 * 1000000000000;
+export const MAX_MONEY = 9_999 * 1_000_000_000_000;

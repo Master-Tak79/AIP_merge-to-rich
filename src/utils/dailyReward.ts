@@ -13,8 +13,12 @@ export function getKstDayKey(timeMs: number = Date.now()): string {
 
 export function isDailyRewardClaimAvailable(
     lastClaimDayKey: string | null,
+    lastClaimAt: number | null = null,
     timeMs: number = Date.now()
 ): boolean {
+    if (lastClaimAt !== null && timeMs < lastClaimAt) {
+        return false;
+    }
     return lastClaimDayKey !== getKstDayKey(timeMs);
 }
 
