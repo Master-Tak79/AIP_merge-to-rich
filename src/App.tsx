@@ -11,21 +11,23 @@ import {
   AdButton,
   BoostModal,
   BoostStatus,
-  AchievementModal
+  AchievementModal,
+  DailyRewardModal
 } from './components';
 import { useGameStore } from './store/useGameStore';
 import { MAX_MONEY, ACHIEVEMENTS, COIN_LEVELS } from './types/game';
-import { FaCoins, FaQuestion, FaTrophy } from 'react-icons/fa';
+import { FaCoins, FaGift, FaQuestion, FaTrophy } from 'react-icons/fa';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { AnimatePresence, motion } from 'framer-motion';
 
-type ModalType = 'store' | 'collection' | 'help' | 'settings' | 'boost' | 'achievement' | 'ending' | null;
+type ModalType = 'store' | 'collection' | 'help' | 'settings' | 'boost' | 'achievement' | 'dailyReward' | 'ending' | null;
 
 function App() {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const unlockedAchievements = useGameStore(state => state.unlockedAchievements);
   const resetGame = useGameStore(state => state.resetGame);
   const totalMoney = useGameStore(state => state.totalMoney);
+  const canClaimDailyReward = useGameStore(state => state.canClaimDailyReward());
   const lastDiscoveredLevel = useGameStore(state => state.lastDiscoveredLevel);
   const [showAchievementBadge, setShowAchievementBadge] = useState(false);
   const [celebrationText, setCelebrationText] = useState<string | null>(null);
@@ -173,6 +175,17 @@ function App() {
           <span>癒몄? 癒몃땲 ??댁엘</span>
         </h1>
         <div className="title-actions">
+          <button className="title-icon-btn daily-reward-btn" onClick={() => setActiveModal('dailyReward')}>
+            <FaGift />
+            {canClaimDailyReward && (
+              <motion.span
+                className="daily-reward-badge"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500 }}
+              />
+            )}
+          </button>
           <button className="title-icon-btn achievement-btn" onClick={handleOpenAchievement}>
             <FaTrophy />
             {showAchievementBadge && (
@@ -230,6 +243,9 @@ function App() {
         )}
         {activeModal === 'achievement' && (
           <AchievementModal onClose={() => setActiveModal(null)} />
+        )}
+        {activeModal === 'dailyReward' && (
+          <DailyRewardModal onClose={() => setActiveModal(null)} />
         )}
         {activeModal === 'ending' && (
           <motion.div

@@ -11,3 +11,4 @@ export * from './AdButton';
 export * from './BoostModal';
 export * from './BoostStatus';
 export * from './AchievementModal';
+export * from './DailyRewardModal';

@@ -96,6 +96,12 @@ export interface GameState {
     // 신규 업그레이드
     incomeMultiplierLevel: number; // 수익 배율 레벨 (1.0 + level * 0.1)
     autoMergeInterval: number; // 자동 병합 간격 (ms), 기본 5000ms
+    // 일일 보상
+    dailyRewardLastClaimAt: number | null; // 마지막 수령 시각
+    dailyRewardLastClaimDayKey: string | null; // 마지막 수령 KST 날짜 (YYYY-MM-DD)
+    dailyRewardStreak: number; // 연속 수령 일수
+    dailyRewardTotalClaimed: number; // 누적 수령 횟수
+    dailyRewardLastAmount: number; // 마지막 수령 금액
 }
 
 // 업적 타입 정의

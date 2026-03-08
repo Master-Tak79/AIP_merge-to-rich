@@ -53,6 +53,11 @@ export function HelpModal({ onClose }: HelpModalProps) {
             title: '데이터 저장',
             description: '게임 데이터는 기기에 자동 저장됩니다. 브라우저 캐시 삭제 시 데이터가 날아갈 수 있으니 주의하세요!'
         },
+        {
+            icon: '🎁',
+            title: '일일 보상',
+            description: '우측 상단 선물 버튼에서 하루 1회 보상을 받을 수 있어요. 보상은 한국 시간 자정에 초기화됩니다.'
+        },
     ];
 
     return (

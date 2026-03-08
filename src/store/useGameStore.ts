@@ -2,6 +2,12 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Coin, GameState, BoostType } from '../types/game';
 import { TOTAL_CELLS, COIN_PPS, COIN_LEVELS, ACHIEVEMENTS } from '../types/game';
+import {
+    getDailyRewardAmount,
+    getKstDayKey,
+    getNextDailyRewardStreak,
+    isDailyRewardClaimAvailable,
+} from '../utils/dailyReward';
 
 // ?좏떥由ы떚: 怨좎쑀 ID ?앹꽦
 const generateId = () => `coin_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
@@ -77,6 +83,8 @@ interface GameStore extends GameState {
     // ?좉퇋 ?낃렇?덉씠??
     upgradeIncomeMultiplier: () => boolean;
     upgradeAutoMergeSpeed: () => boolean;
+    claimDailyReward: () => boolean;
+    canClaimDailyReward: () => boolean;
 
     // ???덈꺼 諛쒓껄 ?곹깭
     lastDiscoveredLevel: number | null;
@@ -103,6 +111,11 @@ const initialState: GameState & { lastDiscoveredLevel: number | null } = {
     // ?좉퇋 ?낃렇?덉씠??
     incomeMultiplierLevel: 0, // 1.0x遺???쒖옉 (0?덈꺼 = 1.0x)
     autoMergeInterval: 5000, // 5珥덈????쒖옉
+    dailyRewardLastClaimAt: null,
+    dailyRewardLastClaimDayKey: null,
+    dailyRewardStreak: 0,
+    dailyRewardTotalClaimed: 0,
+    dailyRewardLastAmount: 0,
 };
 
 export const useGameStore = create<GameStore>()(
@@ -468,6 +481,39 @@ export const useGameStore = create<GameStore>()(
                 return false;
             },
 
+            claimDailyReward: () => {
+                const { dailyRewardLastClaimDayKey, dailyRewardStreak } = get();
+
+                if (!isDailyRewardClaimAvailable(dailyRewardLastClaimDayKey)) {
+                    return false;
+                }
+
+                const now = Date.now();
+                const nextStreak = getNextDailyRewardStreak(
+                    dailyRewardLastClaimDayKey,
+                    dailyRewardStreak,
+                    now
+                );
+                const rewardAmount = getDailyRewardAmount(nextStreak);
+
+                set(state => ({
+                    totalMoney: state.totalMoney + rewardAmount,
+                    totalEarnedMoney: state.totalEarnedMoney + rewardAmount,
+                    dailyRewardLastClaimAt: now,
+                    dailyRewardLastClaimDayKey: getKstDayKey(now),
+                    dailyRewardStreak: nextStreak,
+                    dailyRewardTotalClaimed: state.dailyRewardTotalClaimed + 1,
+                    dailyRewardLastAmount: rewardAmount,
+                }));
+
+                get().checkAchievements();
+                return true;
+            },
+
+            canClaimDailyReward: () => {
+                return isDailyRewardClaimAvailable(get().dailyRewardLastClaimDayKey);
+            },
+
             resetGame: () => {
                 set(initialState);
             },
@@ -501,6 +547,11 @@ export const useGameStore = create<GameStore>()(
                 // ?좉퇋 ?낃렇?덉씠??
                 incomeMultiplierLevel: state.incomeMultiplierLevel,
                 autoMergeInterval: state.autoMergeInterval,
+                dailyRewardLastClaimAt: state.dailyRewardLastClaimAt,
+                dailyRewardLastClaimDayKey: state.dailyRewardLastClaimDayKey,
+                dailyRewardStreak: state.dailyRewardStreak,
+                dailyRewardTotalClaimed: state.dailyRewardTotalClaimed,
+                dailyRewardLastAmount: state.dailyRewardLastAmount,
             }),
             onRehydrateStorage: () => (state) => {
                 if (!state) return;
@@ -511,6 +562,11 @@ export const useGameStore = create<GameStore>()(
                 state.incomeMultiplierLevel = state.incomeMultiplierLevel ?? 0;
                 state.autoMergeInterval = state.autoMergeInterval ?? 5000;
                 state.totalEarnedMoney = state.totalEarnedMoney ?? 0;
+                state.dailyRewardLastClaimAt = state.dailyRewardLastClaimAt ?? null;
+                state.dailyRewardLastClaimDayKey = state.dailyRewardLastClaimDayKey ?? null;
+                state.dailyRewardStreak = state.dailyRewardStreak ?? 0;
+                state.dailyRewardTotalClaimed = state.dailyRewardTotalClaimed ?? 0;
+                state.dailyRewardLastAmount = state.dailyRewardLastAmount ?? 0;
             },
         }
     )
