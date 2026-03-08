@@ -1,0 +1,227 @@
+# 📘 Merge Money Tycoon - 개발 현황 종합 보고서
+
+> **문서 목적**: 이 문서는 '머지 머니 타이쿤'의 시작부터 핵심 앱 릴리즈 `v1.4.0`까지의 개발 과정을 중심으로 기록한 종합 보고서입니다. `2026-03-05` 기준 후속 안정화/문서화 변경은 `docs/CHANGELOG.md`의 `v1.4.1` 항목과 함께 참고합니다.
+
+---
+
+## 🏗️ 1. 프로젝트 개요 (Project Overview)
+
+| 항목 | 상세 내용 |
+|------|-----------|
+| **프로젝트명** | Merge Money Tycoon (머지 머니 타이쿤) |
+| **플랫폼** | Apps in Toss (토스앱 내 미니게임) |
+| **장르** | 하이퍼캐주얼 / 머지(Merge) / 방치형(Idle) |
+| **핵심 재미** | 코인을 합쳐 자산을 증식시키는 쾌감, 시원한 타격감의 UI |
+| **개발 기간** | 2026.01.28 ~ 2026.02.08 |
+| **기준 앱 버전** | `v1.4.0` |
+| **최신 변경 로그** | `v1.4.1` (Updated: 2026-03-05) |
+| **기술 스택** | React 18, Vite, TypeScript, Zustand, Framer Motion, TailwindCSS |
+
+---
+
+## 🤖 2. AI 분석용 요약 (Summary for NotebookLM)
+
+> **NotebookLM을 위한 지시사항**: 이 섹션의 데이터를 사용하여 '게임 구조 마인드맵'과 '성장 곡선 그래프'를 생성하는 데 활용하세요.
+
+### 2.1 핵심 게임 루프 (Core Loop)
+1. **생산 (Spawn)**: 자산을 소비하여 코인을 보드에 생성 (Tap/Auto)
+2. **병합 (Merge)**: 동일 레벨 코인을 합쳐 상위 코인 획득 (Lv+1)
+3. **수익 (Income)**: 보유한 모든 코인이 초당 수익(PPS) 발생
+4. **투자 (Upgrade)**: 수익으로 생산/수익 효율 업그레이드
+5. **반복 (Loop)**: 자산 9999조 도달 시 엔딩
+
+### 2.2 주요 시스템 키워드
+- **Grid System**: 5x5 그리드, 랜덤 빈 셀 탐색 알고리즘
+- **Economy**: 지수 함수 기반 비용 증가 ($Costs \propto Level^x$)
+- **Engagement**: 부스트(광고), 업적(Achievements), 발견(Discovery)
+- **Persistance**: `zustand/persist`를 이용한 자동 저장
+
+---
+
+## 📅 3. 개발 타임라인 (Development Timeline)
+
+### v1.0.0: 프로토타입 (MVP)
+- **핵심 기능**: 5x5 그리드 구현, 드래그 앤 드롭 병합 로직
+- **경제 시스템**: 초기 자산 50원, 레벨별 PPS 설정
+- **UI**: 토스 디자인 시스템(TDS) 스타일의 Clean UI 적용
+
+### v1.1.0: 최적화 및 편의성
+- **반응형 개선**: 모바일 화면(360px~480px) 대응 레이아웃
+- **시청각 피드백**: 머지 성공 효과음, 햅틱 피드백(Vibration API)
+- **머지 보너스**: 합칠 때 일정 확률로 보너스 자산 획득
+
+### v1.2.0: 콘텐츠 확장 & 수익화
+- **부스트 모달**: 광고 시청 시뮬레이션 후 보상 (수익2배, 자동병합, 자동생산)
+- **히든 콘텐츠**: 
+  - 💎 **보석**: Lv.13 이상 시 해금 (고효율 자원)
+  - ₿ **비트코인**: Lv.18 (최종 히든 코인)
+- **UX 개선**: 드래그 애니메이션 부드럽게 개선 (Framer Motion LayoutProjection)
+
+### v1.3.0: 업그레이드 확장 & 완벽주의자
+- **수익 배율**: 1.0x~9.0x 영구 업그레이드 (모든 수익에 적용)
+- **자동 병합 속도**: 5초~0.2초 영구 업그레이드 (부스트 시 간격 적용)
+- **완벽주의자 업적**: 모든 업그레이드 max 시 10억원
+- **저장소 버전**: v5로 업그레이드 (마이그레이션 지원)
+
+### v1.4.0: 밸런스 리워크 & 안정성 보강 (Core Release)
+- **밸런스 리워크**: 6종 업그레이드 비용 곡선 상향, 보석 해금 비용 10억원으로 상향
+- **안정성 보강**: Error Boundary 적용, 서비스워커 자동 업데이트 호환성 개선
+- **릴리즈 정합성**: SEO 메타 태그 추가, 버전 표기/문서 동기화
+- **저장소 버전**: v6로 업그레이드 (기존 세이브 리셋)
+
+### v1.4.1: 후속 안정화 및 문서 정리
+- **배포 보안 정리**: Android 서명 정보의 시크릿 기반 관리 전환, 워크플로우 정비
+- **성능 미세조정**: 생산 버튼 반응성, 부스트 타이머 렌더 범위, 수익 게이지 렌더 방식 개선
+- **문서 동기화**: README/ROADMAP/TROUBLESHOOTING 갱신 및 배포 스크립트 절대경로 의존 제거
+
+---
+
+## 🔍 4. 기술 아키텍처 (Technical Architecture)
+
+### 4.1 상태 관리 (State Management) - Zustand
+```typescript
+interface GameStore {
+  // Core Data
+  coins: Coin[];
+  totalMoney: number;
+  
+  // Upgrades
+  spawnLevel: number;           // 생성되는 코인의 레벨
+  spawnCooldown: number;        // 자동 생산 속도
+  incomeInterval: number;       // 수익 지급 주기
+  incomeMultiplierLevel: number; // 수익 배율 레벨 (v1.3.0+)
+  autoMergeInterval: number;    // 자동 병합 간격 (v1.3.0+)
+  
+  // Systems
+  pps: number;             // Profit Per Second (캐싱됨)
+  discoveredLevels: number[]; // 발견한 코인 도감
+}
+```
+* **Store 구조**: 모든 게임 로직이 `useGameStore` 훅 내부에 캡슐화됨 (Action-State 패턴).
+* **최적화**: `pps`는 매 프레임 계산하지 않고, 머지/생산 시에만 재계산하여 저장.
+
+### 4.2 병합 알고리즘 (Merge Logic)
+1. **Drag End**: 드래그 종료 시 타겟 셀 감지 (유클리드 거리 기반 Nearest Check).
+2. **Compatibility**: `ID`가 다르고 `Level`이 같은지 확인.
+3. **Process**:
+   - `New Level = Old Level + 1`
+   - 두 코인 제거, 새 코인 생성 (새 ID 부여).
+   - `Trigger Effects`: 햅틱, 사운드, 보너스 계산.
+   - `State Update`: 코인 목록 갱신 및 PPS 재계산.
+
+---
+
+## 📊 5. 데이터 및 밸런싱 (Data & Balancing)
+
+> **활용 팁**: 이 데이터를 이용해 엑셀이나 차트를 그려 밸런스 시뮬레이션을 할 수 있습니다.
+
+### 5.1 업그레이드 비용 공식
+| 업그레이드명 | 공식 | 설명 |
+|------------|------|------|
+| **시작 레벨** | $1000 \times Level^2$ | 초반 성장을 막기 위해 가파르게 상승 |
+| **생산 속도** | $1000 \times Level^{1.8}$ | 클릭 효율 증대 (부스트 연계) |
+| **수익 속도** | $1000 \times Level^{2.0}$ | 패시브 수익 극대화 (가장 비싼 업그레이드) |
+| **머지 보너스** | $200 \times (Level+1)^{1.4}$ | 합치는 행위 자체에 보상 부여 |
+
+### 5.2 코인 가치 (Coin Value Table)
+| 레벨 | 이름 | PPS (초당 수익) | 생성/구매 가치 |
+|:---:|:---:|:---:|:---:|
+| 1 | 1원 | 1 | 10 |
+| 5 | 500원 | 20 | 500 |
+| 10 | 금괴 | 10,000 | 250,000 |
+| 12 | 토스 빌딩 | 150,000 | 5,000,000 |
+| 18 | 비트코인 | **100억** | (생성 불가) |
+
+---
+
+## 🛠️ 6. 트러블슈팅 로그 (Troubleshooting Log)
+
+### 이슈 1: 무한 루프 (Infinite Loop)
+- **증상**: 첫 코인 발견 토스트 표시 직후 화면이 멈추거나 꺼짐.
+- **원인**: `useEffect` 의존성 배열에 상태 변경 함수(`clearLastDiscoveredLevel`)를 넣어, 렌더링 → 함수 재생성 → 렌더링의 순환 발생.
+- **해결**: `useGameStore.getState().clearFn()`으로 직접 접근하여 의존성 제거.
+
+### 이슈 2: 프로그레스바 멈춤
+- **증상**: 수익 게이지바는 차는데 색상이 투명하게 보임.
+- **원인**: CSS 변수 `--toss-blue`가 정의되지 않음.
+- **해결**: `index.css`의 `:root` 섹션에 변수 추가.
+
+### 이슈 3: 토스트 메시지 위치
+- **증상**: `transform: translateX(-50%)` 사용 시 Framer Motion의 `animate` 속성(x, y 이동)과 충돌하여 위치가 어긋남.
+- **해결**: `left: 0; right: 0; margin: 0 auto; width: fit-content;` 방식을 사용하여 Transform 없이 중앙 정렬 구현.
+
+---
+
+## 🔮 7. 향후 발전 계획 (Roadmap)
+
+1.  **오프라인 수익 (Offline Earnings)**
+    *   앱 종료 후 재접속 시 경과 시간($t$) 계산: $Reward = PPS \times t \times 0.5$ (50% 효율)
+2.  **리더보드 (Leaderboard)**
+    *   Firebase 등을 연동하여 최대 자산 랭킹 표시.
+3.  **사운드 고도화**
+    *   배경 음악(BGM) 추가 및 SFX 다양화 (콤보 사운드).
+4.  **다국어 지원 (i18n)**
+    *   글로벌 출시를 위한 영어/일본어 JSON 리소스 분리.
+
+---
+---
+
+## 🚀 8. 배포 및 출시 준비 (Release Engineering) - 2026-02-09
+
+### 8.1 PWA (Progressive Web App) 도입
+- **목표**: 웹 게임을 앱처럼 설치 가능하게 만들기 (TWA 준비)
+- **구현**:
+  - `vite-plugin-pwa` 적용: `manifest.webmanifest` 및 `sw.js` 자동 생성
+  - `vite-env.d.ts` 추가: TypeScript 타입 에러 해결 (`virtual:pwa-register`)
+  - **결과**: `https://purple790779.github.io/AIP_merge-to-rich/` 접속 시 설치 프롬프트 활성화
+
+### 8.2 GitHub Actions를 이용한 안드로이드 클라우드 빌드
+- **문제**: 로컬 환경에 Android SDK 및 JDK 설정 부재로 빌드 실패
+- **해결**: GitHub Actions CI/CD 파이프라인 구축 (`.github/workflows/android-build.yml`)
+- **주요 워크플로우**:
+  1. **환경 설정**: Ubuntu Latest, Node.js 22 (Capacitor 요구사항), JDK 21 (Gradle 8+ 요구사항)
+  2. **키스토어 관리**: `ANDROID_KEYSTORE_BASE64` 시크릿을 `upload.keystore`로 복원하고, 비밀번호/별칭도 시크릿으로 주입
+  3. **권한 수정**: `chmod +x android/gradlew`로 실행 권한 부여
+  4. **빌드**: `./gradlew bundleRelease`로 서명된 `.aab` 파일 생성
+- **성과**: 로컬 개발 환경 제약 없이 클라우드에서 언제든 배포 파일 생성 가능
+
+### 8.3 개인정보처리방침 (Privacy Policy)
+- **문서화**: ‘개인정보를 수집하지 않음’을 명시한 `PRIVACY_POLICY.md` 작성 및 배포
+- **게시**: GitHub Pages에 호스팅하여 앱 스토어 제출용 URL 확보
+
+### 8.4 스토어 출시 조건 (Correction)
+- **비공개 테스트 조건 확인**: 2023년 11월 이후 생성된 개인 계정은 **12명의 테스터가 14일간 연속 참여**해야 프로덕션 출시 가능 (20명 아님).
+- **전략**: 스토어 등록 정보와 콘텐츠 등급 심사를 먼저 통과한 뒤, 지인 및 커뮤니티를 통해 12명의 테스터 모집 예정.
+
+### 8.5 안드로이드 앱 디버깅 (2026-02-12)
+- **화이트 스크린 이슈**:
+  - **증상**: 테스트 트랙에서 설치한 앱 실행 시 빈 화면만 표시
+  - **원인**: `vite.config.ts`의 `base: '/AIP_merge-to-rich/'`가 Capacitor WebView에서 asset 경로 불일치 유발
+  - **해결**: 환경변수 `VITE_BUILD_TARGET`으로 분기 처리 (`capacitor` → `'./'`, 기본 → `'/AIP_merge-to-rich/'`)
+- **아이콘 이슈**:
+  - **증상**: Capacitor 기본 아이콘(파란색 X) 표시
+  - **원인**: `android/app/src/main/res/mipmap-*/` 폴더에 기본 벡터 아이콘 잔존
+  - **해결**: `generate-android-icons.cjs` 스크립트로 `icon_600.png` → 5가지 해상도 PNG + Adaptive Icon 자동 생성
+- **앱 이름 한글화**:
+  - `strings.xml`: `Merge Money Tycoon` → `머지머니타이쿤`
+  - `capacitor.config.ts`: `appName` 동기화
+
+### 8.6 프로덕션 액세스 신청 및 테스터 피드백 (2026-03-05)
+- **비공개 테스트 완료**: 12명 테스터, 14일간 연속 참여 요건 충족
+- **프로덕션 액세스 신청**: Google Play Console에서 설문 작성 후 제출
+- **핵심 테스터 피드백**:
+  - **콘텐츠 소모 속도**: "20분이면 모든 업그레이드 최대치 달성 가능" → 게임 지속성 부족
+  - **해결 방향**: 밸런스 리워크(비용 곡선 강화), 환생(Prestige) 시스템, 오프라인 수익 도입 계획
+  - 상세 로드맵: `docs/ROADMAP.md` v1.4.0 섹션 참고
+
+### 8.7 보안 및 빌드 안정화 후속 조치 (2026-03-05)
+- **보안 강화**:
+  - 저장소에 포함된 `release.keystore` 제거
+  - `build.gradle` 평문 비밀번호 제거, 환경변수 기반 서명 구성으로 전환
+  - 워크플로에서 keystore 아티팩트 업로드 제거
+- **빌드 안정화**:
+  - Node 버전 정책을 `22.x`로 고정 (`.nvmrc`, `package.json` `engines`)
+  - `VITE_ENABLE_PWA=false` 분기 빌드 추가로 Vite/PWA 크래시 원인 분리 가능하게 개선
+
+---
+_Generated by Antigravity for Apps in Toss Project_
