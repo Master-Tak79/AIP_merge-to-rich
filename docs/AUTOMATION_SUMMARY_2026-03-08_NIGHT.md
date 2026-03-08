@@ -23,9 +23,9 @@
 - 라이브 안정성 체크리스트 갱신: `docs/LIVE_STABILITY_CHECKLIST_2026-03-08.md`
 
 ## 4) local commits created
-- (작성 예정) `chore: recover local rollup optional dependency and verify build`
-- (작성 예정) `feat: harden reward guardrails and add retention achievements`
-- (작성 예정) `docs: sync live-ops docs for v1.5.2 night batch`
+- `0f6f14c` chore: recover local build deps and bump version to 1.5.2
+- `0052499` feat: harden timed and daily reward guardrails
+- `3f5c151` docs: sync v1.5.2 live-ops notes and night summary
 
 ## 5) remaining risks / next best steps
 - 서버 검증 없는 로컬 저장 구조 특성상 기기 시계 조작 완전 차단은 어려움
