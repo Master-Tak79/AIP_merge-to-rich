@@ -15,6 +15,8 @@ interface DailyRewardModalProps {
 
 export function DailyRewardModal({ onClose }: DailyRewardModalProps) {
     const dailyRewardLastClaimDayKey = useGameStore((state) => state.dailyRewardLastClaimDayKey);
+    const dailyRewardLastClaimAt = useGameStore((state) => state.dailyRewardLastClaimAt);
+    const lastSeenAt = useGameStore((state) => state.lastSeenAt);
     const dailyRewardStreak = useGameStore((state) => state.dailyRewardStreak);
     const dailyRewardTotalClaimed = useGameStore((state) => state.dailyRewardTotalClaimed);
     const dailyRewardLastAmount = useGameStore((state) => state.dailyRewardLastAmount);
@@ -22,6 +24,7 @@ export function DailyRewardModal({ onClose }: DailyRewardModalProps) {
     const claimDailyReward = useGameStore((state) => state.claimDailyReward);
 
     const canClaim = canClaimDailyReward();
+    const clockRollbackBlocked = dailyRewardLastClaimAt !== null && lastSeenAt < dailyRewardLastClaimAt;
     const nextStreak = getNextDailyRewardStreak(dailyRewardLastClaimDayKey, dailyRewardStreak);
     const todayReward = getDailyRewardAmount(nextStreak);
     const tomorrowReward = getDailyRewardAmount(dailyRewardStreak + 1);
@@ -81,6 +84,12 @@ export function DailyRewardModal({ onClose }: DailyRewardModalProps) {
                         보상은 매일 한국 시간(KST) 자정에 초기화됩니다.
                         <br />
                         오늘 기준일: {getKstDayKey()}
+                        {clockRollbackBlocked && (
+                            <>
+                                <br />
+                                기기 시간이 최근 수령 시점보다 과거로 설정되어 오늘 보상이 잠겨 있습니다.
+                            </>
+                        )}
                     </div>
                 </div>
 
