@@ -33,3 +33,36 @@
 - 서버 검증 없는 로컬 저장 구조 특성상 기기 시계 조작 완전 차단은 어려움
 - timed reward 밸런스(복귀 배수/오프라인 효율/상한) 실플레이 데이터 기반 2차 조정 필요
 - Android 실기기에서 백그라운드 전환 경계(짧은 sleep/긴 sleep) QA 추가 권장
+
+---
+
+## 6) continuation batch addendum (2026-03-08)
+
+### 6-1) balance tuning (low-risk)
+- timed reward 수치 보수 조정
+  - 복귀 보상 배수: `x30/x60/x120` → `x24/x48/x90`
+  - 오프라인 정산 효율: `50%` → `45%`
+- 기존 시간 구간(복귀 48h/72h/168h, 오프라인 최소 15분/최대 4시간)과 복귀 하드캡(`5,000,000`)은 유지
+
+### 6-2) live UX polish
+- 복귀/오프라인 보상 모달 안내 문구를 실제 규칙(구간별 배수, 효율, 상한)과 일치하도록 명시
+- `버리기` 동작에 확인 다이얼로그 추가 및 버튼 라벨을 `버리기(복구 불가)`로 변경
+- 도움말의 리텐션/보상 설명을 실제 동작 기준으로 구체화
+
+### 6-3) small content expansion
+- 리텐션 업적 2종 추가
+  - 복귀 베테랑(복귀 보상 7회)
+  - 오프라인 매니저(오프라인 보상 25회)
+
+### 6-4) docs sync
+- `docs/RETURN_REWARD_PLAN.md`의 복귀 배수 값을 코드 기준(`x24/x48/x90`)으로 동기화
+
+### 6-5) validations run (continuation)
+- `npm run lint` ✅
+- `npm run build` ✅
+- (추가 UX 수정 후 재검증) `npm run lint` ✅
+- (추가 UX 수정 후 재검증) `npm run build` ✅
+
+### 6-6) local commits created (continuation)
+- `f0b9478` feat: tune timed rewards and clarify korean retention guidance
+- `1c924db` feat: safeguard timed reward dismiss actions
