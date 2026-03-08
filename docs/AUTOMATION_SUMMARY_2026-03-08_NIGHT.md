@@ -26,6 +26,8 @@
 - `0f6f14c` chore: recover local build deps and bump version to 1.5.2
 - `0052499` feat: harden timed and daily reward guardrails
 - `3f5c151` docs: sync v1.5.2 live-ops notes and night summary
+- `2181499` docs: finalize night summary commit references
+- `ad98430` feat: clarify daily reward lock reason on clock rollback
 
 ## 5) remaining risks / next best steps
 - 서버 검증 없는 로컬 저장 구조 특성상 기기 시계 조작 완전 차단은 어려움
