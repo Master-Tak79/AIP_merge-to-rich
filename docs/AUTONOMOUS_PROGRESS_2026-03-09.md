@@ -32,3 +32,13 @@
 - 변경: `AchievementModal`을 카테고리 섹션형으로 개편하고, 레거시 랭크 카드/카테고리별 완료 요약/잠금 업적 진행도(숫자+퍼센트)를 노출해 장기 동기 체감을 강화했습니다.
 - 문서: `docs/ACHIEVEMENT_SYSTEM.md` 신설, `README`, `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/ROADMAP.md`, `docs/PHASE1_TASKS.md`를 최신 구조로 동기화했습니다.
 - 검증: lint/build는 본 체크포인트에서 실행 예정.
+
+## 2026-03-09 13:02 KST
+- 검토: `feat/2026-03-09-content-expansion` 브랜치를 재점검한 결과 작업 트리가 완전히 깨끗했습니다(`git status` clean). 최신 HEAD는 `956c67b` (`feat: expand achievements into long-tail category system`)입니다.
+- 검증: `npm run lint` 통과, `npm run build` 통과.
+- 조치: 새로 체크포인트할 변경분이 없어 빈 로컬 체크포인트 커밋은 만들지 않았습니다. 원격 푸시는 하지 않았습니다.
+
+## 2026-03-09 14:02 KST
+- 검토: `feat/2026-03-09-content-expansion` 브랜치를 점검한 결과 코드 작업은 직전 HEAD `956c67b` (`feat: expand achievements into long-tail category system`)에 이미 정리되어 있었고, 작업 트리에는 진행 로그 문서 갱신만 남아 있어 로컬 체크포인트로 묶기 적절한 상태였습니다.
+- 검증: `npm run lint` 통과, `npm run build` 통과.
+- 조치: 진행 로그 갱신을 포함한 로컬 체크포인트 커밋을 생성했습니다. 원격 푸시는 하지 않았습니다.
