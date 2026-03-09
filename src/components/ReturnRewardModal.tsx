@@ -37,7 +37,7 @@ export function ReturnRewardModal({ onClose, onDismiss }: ReturnRewardModalProps
     };
 
     const handleDismiss = () => {
-        if (!window.confirm('복귀 보상을 버리면 복구할 수 없습니다. 계속할까요?')) return;
+        if (!window.confirm('복귀 보상을 버리면 복구할 수 없습니다. 계속하시겠습니까?')) return;
         onDismiss();
     };
 
@@ -79,7 +79,8 @@ export function ReturnRewardModal({ onClose, onDismiss }: ReturnRewardModalProps
                     </div>
 
                     <div className="daily-reward-note">
-                        48시간 이상 미접속 시 지급됩니다. 48~72시간 x{RETURN_REWARD_MID_MULTIPLIER}, 72~168시간 x{RETURN_REWARD_HIGH_MULTIPLIER}, 168시간 이상 x{RETURN_REWARD_MAX_MULTIPLIER}이며 최대 {formatMoney(RETURN_REWARD_HARD_CAP)}원까지 받을 수 있습니다.
+                        48시간 이상 미접속 시 지급됩니다. 48~72시간은 x{RETURN_REWARD_MID_MULTIPLIER}, 72~168시간은 x{RETURN_REWARD_HIGH_MULTIPLIER},
+                        168시간 이상은 x{RETURN_REWARD_MAX_MULTIPLIER}이며 최대 {formatMoney(RETURN_REWARD_HARD_CAP)}원까지 받을 수 있습니다.
                     </div>
                 </div>
 
@@ -88,7 +89,7 @@ export function ReturnRewardModal({ onClose, onDismiss }: ReturnRewardModalProps
                         나중에 받기
                     </button>
                     <button className="toss-button danger" onClick={handleDismiss}>
-                        버리기(복구 불가)
+                        버리기
                     </button>
                     <button className="toss-button gold" onClick={handleClaim}>
                         보상 받기

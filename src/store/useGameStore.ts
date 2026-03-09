@@ -24,6 +24,7 @@ import {
     getNextDailyRewardStreak,
     isDailyRewardClaimAvailable,
 } from '../utils/dailyReward';
+import { getMissionById, isMissionCompleted } from '../game/missions';
 
 export const useGameStore = create<GameStore>()(
     persist(
@@ -347,6 +348,23 @@ export const useGameStore = create<GameStore>()(
             canClaimDailyReward: () => {
                 const { dailyRewardLastClaimDayKey, dailyRewardLastClaimAt } = get();
                 return isDailyRewardClaimAvailable(dailyRewardLastClaimDayKey, dailyRewardLastClaimAt);
+            },
+
+            claimMissionReward: (missionId) => {
+                const state = get();
+                if (state.missionClaimedIds.includes(missionId)) return false;
+
+                const mission = getMissionById(missionId);
+                if (!mission || !isMissionCompleted(state, mission)) return false;
+
+                set((currentState) => ({
+                    missionClaimedIds: [...currentState.missionClaimedIds, missionId],
+                    totalMoney: currentState.totalMoney + mission.reward,
+                    totalEarnedMoney: currentState.totalEarnedMoney + mission.reward,
+                }));
+
+                get().checkAchievements();
+                return true;
             },
 
             refreshTimedRewards: (now = Date.now()) => {

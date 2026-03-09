@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaCoins, FaGift, FaQuestion, FaTrophy } from 'react-icons/fa';
+import { FaBullseye, FaCoins, FaGift, FaQuestion, FaTrophy } from 'react-icons/fa';
 import { IoSettingsSharp } from 'react-icons/io5';
 import './index.css';
 import {
@@ -14,6 +14,7 @@ import {
     DailyRewardModal,
     Header,
     HelpModal,
+    MissionModal,
     OfflineRewardModal,
     ReturnRewardModal,
     SettingsModal,
@@ -21,6 +22,7 @@ import {
     TimedRewardTray,
 } from './components';
 import { useGameStore } from './store/useGameStore';
+import { getClaimableMissionCountByMetrics } from './game/missions';
 import { ACHIEVEMENTS, COIN_LEVELS, MAX_MONEY } from './types/game';
 
 type ModalType =
@@ -31,6 +33,7 @@ type ModalType =
     | 'boost'
     | 'achievement'
     | 'dailyReward'
+    | 'mission'
     | 'returnReward'
     | 'offlineReward'
     | 'ending'
@@ -44,11 +47,20 @@ function App() {
     const [showAchievementBadge, setShowAchievementBadge] = useState(false);
     const [celebrationText, setCelebrationText] = useState<string | null>(null);
     const [discoveryText, setDiscoveryText] = useState<string | null>(null);
+    const [, setDailyRewardClock] = useState(() => Date.now());
 
     const unlockedAchievements = useGameStore((state) => state.unlockedAchievements);
     const resetGame = useGameStore((state) => state.resetGame);
     const totalMoney = useGameStore((state) => state.totalMoney);
-    const canClaimDailyReward = useGameStore((state) => state.canClaimDailyReward());
+    const canClaimDailyRewardFromStore = useGameStore((state) => state.canClaimDailyReward);
+    const missionClaimedIds = useGameStore((state) => state.missionClaimedIds);
+    const totalMergeCount = useGameStore((state) => state.totalMergeCount);
+    const totalEarnedMoney = useGameStore((state) => state.totalEarnedMoney);
+    const discoveredLevels = useGameStore((state) => state.discoveredLevels);
+    const spawnLevel = useGameStore((state) => state.spawnLevel);
+    const dailyRewardTotalClaimed = useGameStore((state) => state.dailyRewardTotalClaimed);
+    const returnRewardTotalClaimed = useGameStore((state) => state.returnRewardTotalClaimed);
+    const offlineRewardTotalClaimed = useGameStore((state) => state.offlineRewardTotalClaimed);
     const lastDiscoveredLevel = useGameStore((state) => state.lastDiscoveredLevel);
     const pendingReturnReward = useGameStore((state) => state.pendingReturnReward);
     const pendingOfflineReward = useGameStore((state) => state.pendingOfflineReward);
@@ -60,12 +72,33 @@ function App() {
     const discoveryShowTimerRef = useRef<number | null>(null);
     const discoveryHideTimerRef = useRef<number | null>(null);
 
+    const canClaimDailyReward = canClaimDailyRewardFromStore();
+    const claimableMissionCount = getClaimableMissionCountByMetrics(
+        {
+            totalMergeCount,
+            totalEarnedMoney,
+            discoveredLevels,
+            spawnLevel,
+            dailyRewardTotalClaimed,
+            returnRewardTotalClaimed,
+            offlineRewardTotalClaimed,
+        },
+        missionClaimedIds
+    );
     const effectiveSuppressedTimedRewardModal =
         suppressedTimedRewardModal === 'returnReward' && !pendingReturnReward
             ? null
             : suppressedTimedRewardModal === 'offlineReward' && !pendingOfflineReward
                 ? null
                 : suppressedTimedRewardModal;
+
+    useEffect(() => {
+        const timerId = window.setInterval(() => {
+            setDailyRewardClock(Date.now());
+        }, 60_000);
+
+        return () => window.clearInterval(timerId);
+    }, []);
 
     useEffect(() => {
         refreshTimedRewards();
@@ -83,6 +116,7 @@ function App() {
             }
 
             useGameStore.getState().refreshTimedRewards();
+            setDailyRewardClock(Date.now());
         };
 
         window.addEventListener('pagehide', syncHeartbeat);
@@ -280,6 +314,21 @@ function App() {
                         )}
                     </button>
                     <button
+                        className="title-icon-btn mission-btn"
+                        onClick={() => setActiveModal('mission')}
+                        aria-label="성장 목표"
+                    >
+                        <FaBullseye />
+                        {claimableMissionCount > 0 && (
+                            <motion.span
+                                className="mission-badge"
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ type: 'spring', stiffness: 500 }}
+                            />
+                        )}
+                    </button>
+                    <button
                         className="title-icon-btn achievement-btn"
                         onClick={handleOpenAchievement}
                         aria-label="업적"
@@ -332,6 +381,7 @@ function App() {
                 {activeModal === 'boost' && <BoostModal onClose={() => setActiveModal(null)} />}
                 {activeModal === 'achievement' && <AchievementModal onClose={() => setActiveModal(null)} />}
                 {activeModal === 'dailyReward' && <DailyRewardModal onClose={() => setActiveModal(null)} />}
+                {activeModal === 'mission' && <MissionModal onClose={() => setActiveModal(null)} />}
                 {activeModal === 'returnReward' && (
                     <ReturnRewardModal
                         onClose={() => closeTimedRewardModal('returnReward')}

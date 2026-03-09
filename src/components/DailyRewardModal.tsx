@@ -20,8 +20,8 @@ export function DailyRewardModal({ onClose }: DailyRewardModalProps) {
     const dailyRewardStreak = useGameStore((state) => state.dailyRewardStreak);
     const dailyRewardTotalClaimed = useGameStore((state) => state.dailyRewardTotalClaimed);
     const dailyRewardLastAmount = useGameStore((state) => state.dailyRewardLastAmount);
-    const canClaimDailyReward = useGameStore((state) => state.canClaimDailyReward);
     const claimDailyReward = useGameStore((state) => state.claimDailyReward);
+    const canClaimDailyReward = useGameStore((state) => state.canClaimDailyReward);
 
     const canClaim = canClaimDailyReward();
     const clockRollbackBlocked = dailyRewardLastClaimAt !== null && lastSeenAt < dailyRewardLastClaimAt;

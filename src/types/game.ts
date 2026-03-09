@@ -111,6 +111,7 @@ export interface GameState {
     offlineRewardLastClaimAt: number | null;
     offlineRewardTotalClaimed: number;
     pendingOfflineReward: TimedRewardPreview | null;
+    missionClaimedIds: string[];
 }
 
 export interface Achievement {

@@ -1,75 +1,51 @@
 # 변경 이력
 
 상태: Current  
-기준일: 2026-03-08
+기준일: 2026-03-09
+
+## [Unreleased] - 2026-03-09
+
+### 콘텐츠 확장
+- 미션 시스템 톤/구조 개편: Daily Quick Wins(3) + Weekly Goals(6) + Long-term Milestones(9)
+- 일일 구간을 최소화(2~3개)하고 주간/장기 목표 중심으로 동기를 이전해 체크리스트 피로 완화
+- 상단 진입 버튼/모달 문구를 "성장 로드맵" 중심으로 정리하고, 장기 목표 리셋 없음 안내 추가
+- 도감 동기 강화를 위해 `discovered_level_count` 기반 마일스톤 미션 추가
+
+### 안정화 / 정합성
+- 앱 상단 일일 보상 배지가 store 가드 기반 eligibility 경로를 사용하도록 정리
+- `android/app/build.gradle`의 `versionName`을 `1.5.2`로 문서/웹 버전과 동기화
+- README 및 handoff 문서의 Windows 절대 경로 링크를 상대 경로로 정리
 
 ## [1.5.2] - 2026-03-08
 
-### 빌드 환경 복구
-- `npm i` 재설치로 `@rollup/rollup-linux-x64-gnu` optional dependency 누락 상태를 복구
-- 로컬 기준 `npm run build` 재통과 확인
+### 라이브 운영 안정화
+- 보류 중인 복귀 보상 / 오프라인 보상을 persist 대상에 포함해 앱 재시작 후에도 유지되도록 수정
+- hydration 시 유효한 pending reward만 복원하도록 보정
+- 일일 보상 가능 상태가 KST 자정 경계에서 자동 갱신되도록 `App.tsx`에 분 단위 시계 갱신 추가
 
-### 보상 안정성 / 가드레일
-- 일일 보상 수령 가능 판정에 `lastClaimAt` 시계 역행 가드 추가
-- 상단 배지/App과 일일 보상 모달이 동일한 `canClaimDailyReward()` 경로를 사용하도록 통일
-- 시계 역행으로 수령이 잠긴 경우 일일 보상 모달에 원인 문구를 노출
-- `refreshTimedRewards()`에서 시스템 시간이 뒤로 간 경우 `lastSeenAt` 역행 저장을 막는 보정 추가
-- 장기 복귀 보상이 pending일 때 오프라인 보상을 신규 생성하지 않도록 우선순위 정리(중복 정산 완화)
+### UI / UX
+- 좁은 화면에서 상단 게임 타이틀이 버튼 영역을 침범하지 않도록 레이아웃과 반응형 타이포를 조정
+- 메인 화면, 헤더, 일일 보상, timed reward 모달 / tray의 주요 사용자 노출 문구 정리
 
-### 콘텐츠 확장
-- 리텐션 중심 업적 4종 추가
-  - `출석 루키` (일일 보상 7회)
-  - `출석 챔피언` (일일 보상 30회)
-  - `복귀 단골` (복귀 보상 3회)
-  - `절전 고수` (오프라인 보상 10회)
+### 문서
+- README와 아키텍처 / 로드맵 문서를 `v1.5.2` 기준으로 정리
+- 다음 세션용 handoff 문서 추가
 
 ## [1.5.1] - 2026-03-08
 
-### 라이브 운영 UX 보완
+### timed reward UX 보완
 - timed reward 모달을 닫아도 pending reward를 유지하도록 수정
-- 복귀 보상 / 오프라인 보상을 메인 화면의 전용 tray에서 다시 열 수 있도록 추가
+- 복귀 보상 / 오프라인 보상을 메인 화면 tray에서 다시 열 수 있도록 추가
 - timed reward 모달에 `나중에 받기 / 버리기 / 받기` 동작을 분리
-
-### 안정성
-- `refreshTimedRewards()`가 이미 보류 중인 보상을 새 계산값으로 덮어쓰지 않도록 보정
-- 세션 중 보류 상태와 자동 모달 노출 충돌을 줄이기 위해 `App.tsx`에 suppression 흐름 추가
-
-### 문서 / 메타데이터
-- `README`, `ARCHITECTURE`, `ROADMAP`, `PHASE1_TASKS`, `TEMPLATE_GUIDE`를 `v1.5.1` 기준으로 갱신
-- 버전 메타데이터를 `1.5.1`로 상향
 
 ## [1.5.0] - 2026-03-08
 
 ### 구조 리팩토링
-- `useGameStore.ts`를 오케스트레이션 중심으로 정리하고, 순수 로직을 `game/coins.ts`, `game/achievements.ts`, `game/rewards.ts`로 분리
-- 초기 상태와 저장 처리 로직을 `store/gameState.ts`, `store/persistence.ts`, `store/types.ts`로 분리
-- 스타일 구조를 `styles/base.css`, `styles/layout.css`, `styles/modals.css`, `styles/responsive.css`로 분리
-- `pps` 명칭을 `incomePerTick` 기준으로 정리하고, 수익을 초당이 아닌 주기 수익 개념으로 통일
+- `useGameStore.ts`를 오케스트레이션 중심으로 정리하고 게임 로직을 `game/*` 모듈로 분리
+- 초기 상태와 persist 처리를 `store/*` 계층으로 분리
+- 스타일 구조를 `styles/*` 파일로 정리
 
-### 라이브 안정화
-- 비활성 상태에서 계속 돌던 자동 병합 / 자동 생산 polling 제거
-- 주요 사용자 노출 문자열과 safe-area 대응 정리
-
-### 리텐션 기능
+### 기능
 - 복귀 보상 구현
 - 오프라인 보상 최소형 구현
-- timed reward 자동 검출과 중복 수령 방지 흐름 추가
-
-### 수익화 준비
-- `RewardSource` 타입 도입
-- 광고 보상이나 IAP를 연결할 수 있는 공통 보상 진입점 정리
-
-## [1.4.3] - 2026-03-08
-- 일일 보상 1차 적용
-- 문서 정합성 정리
-
-## [1.4.2] - 2026-03-08
-- `formatMoney` 유틸 통합
-- 일부 dead code 제거
-
-## [1.4.1] - 2026-03-05
-- 배포 / 보안 설정 정리
-- 일부 성능 최적화
-
-## [1.4.0] - 2026-03-05
-- 밸런스 및 구조 1차 정리
+- 보상 진입점(`RewardSource`) 구조 정리

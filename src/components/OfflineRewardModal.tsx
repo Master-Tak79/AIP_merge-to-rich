@@ -38,7 +38,7 @@ export function OfflineRewardModal({ onClose, onDismiss }: OfflineRewardModalPro
     };
 
     const handleDismiss = () => {
-        if (!window.confirm('오프라인 정산 금액을 버리면 복구할 수 없습니다. 계속할까요?')) return;
+        if (!window.confirm('오프라인 보상을 버리면 복구할 수 없습니다. 계속하시겠습니까?')) return;
         onDismiss();
     };
 
@@ -80,7 +80,8 @@ export function OfflineRewardModal({ onClose, onDismiss }: OfflineRewardModalPro
                     </div>
 
                     <div className="daily-reward-note">
-                        {Math.floor(OFFLINE_REWARD_MIN_ELAPSED_MS / (60 * 1000))}분 이상 비우면 최근 접속 공백을 정산합니다. 효율 {Math.round(OFFLINE_REWARD_EFFICIENCY * 100)}%, 최대 {Math.floor(OFFLINE_REWARD_MAX_ELAPSED_MS / (60 * 60 * 1000))}시간까지만 반영됩니다.
+                        {Math.floor(OFFLINE_REWARD_MIN_ELAPSED_MS / (60 * 1000))}분 이상 비우면 최근 접속 공백만 정산합니다.
+                        효율은 {Math.round(OFFLINE_REWARD_EFFICIENCY * 100)}%, 최대 {Math.floor(OFFLINE_REWARD_MAX_ELAPSED_MS / (60 * 60 * 1000))}시간까지만 반영됩니다.
                     </div>
                 </div>
 
@@ -89,7 +90,7 @@ export function OfflineRewardModal({ onClose, onDismiss }: OfflineRewardModalPro
                         나중에 받기
                     </button>
                     <button className="toss-button danger" onClick={handleDismiss}>
-                        버리기(복구 불가)
+                        버리기
                     </button>
                     <button className="toss-button gold" onClick={handleClaim}>
                         지금 정산하기

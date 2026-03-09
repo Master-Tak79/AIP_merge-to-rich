@@ -1,16 +1,17 @@
 # Merge Money Tycoon
 
-토스 앱용 머지 + 방치형 웹 게임 프로젝트입니다. React + Vite + TypeScript + Zustand 기반이며, PWA와 Capacitor(Android) 빌드를 함께 지원합니다.
+토스 앱용 머지 + 방치형 웹 게임 프로젝트입니다.  
+React + Vite + TypeScript + Zustand 기반이며, PWA와 Capacitor(Android) 빌드를 함께 지원합니다.
 
 현재 기준 상태:
 - 버전: `v1.5.2`
 - 보드 크기: `5x5` (`25칸`)
 - 코인 단계: `Lv.1 ~ Lv.18`
-- 일일 보상: 구현 완료
+- 성장 로드맵: Daily Quick Wins(3) / Weekly Goals(6) / Long-term Milestones(9), 총 18개 목표형 미션 및 보상 수령 UI
+- 일일 보상: 구현 완료, KST 자정 경계 자동 갱신 반영
 - 복귀 보상: 구현 완료
 - 오프라인 보상: 최소형 구현 완료
-- timed reward UX: 닫아도 보류 유지, 메인 화면에서 수동 재오픈 가능
-- 리워드 가드레일: 시계 역행 방어, 복귀/오프라인 중복 정산 완화 반영
+- timed reward UX: 닫아도 보류 유지, 앱 재시작 후에도 유지, 메인 화면에서 재오픈 가능
 - 광고 SDK / IAP: 미연동, 보상 진입점 구조만 준비 완료
 
 ## 기술 스택
@@ -43,70 +44,26 @@ npm run lint
 npm run build
 ```
 
-## 빌드 분기
-- 기본 웹 / PWA 빌드
+## 현재 기준 문서
+- [ONBOARDING.md](./docs/ONBOARDING.md)
+- [ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+- [CHANGELOG.md](./docs/CHANGELOG.md)
+- [ROADMAP.md](./docs/ROADMAP.md)
+- [PHASE1_TASKS.md](./docs/PHASE1_TASKS.md)
+- [MISSION_SYSTEM.md](./docs/MISSION_SYSTEM.md)
+- [PRIVACY_POLICY.md](./docs/PRIVACY_POLICY.md)
 
-```bash
-npm run build
-```
+## 다음 세션 인수인계
+- [NEXT_SESSION_HANDOFF_2026-03-08.md](./docs/NEXT_SESSION_HANDOFF_2026-03-08.md)
 
-- Capacitor(Android WebView) 빌드
+이 문서는 내일 오픈클로 또는 로컬 Codex 세션에서 바로 이어 작업할 수 있도록 현재 상태, 검증 결과, 다음 우선순위를 정리한 handoff 문서입니다.
 
-```bash
-# bash/zsh
-VITE_BUILD_TARGET=capacitor npm run build
+## 참고 문서
+- [RETURN_REWARD_PLAN.md](./docs/RETURN_REWARD_PLAN.md)
+- [TEMPLATE_GUIDE.md](./docs/TEMPLATE_GUIDE.md)
+- [STORE_LISTING.md](./docs/STORE_LISTING.md)
+- [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)
 
-# PowerShell
-$env:VITE_BUILD_TARGET='capacitor'; npm run build
-```
-
-- PWA 비활성 빌드
-
-```bash
-# bash/zsh
-VITE_ENABLE_PWA=false npm run build
-
-# PowerShell
-$env:VITE_ENABLE_PWA='false'; npm run build
-```
-
-## Android 릴리즈 서명
-릴리즈 빌드에는 아래 환경 변수가 필요합니다.
-- `ANDROID_KEYSTORE_PATH`
-- `ANDROID_KEY_ALIAS`
-- `ANDROID_KEYSTORE_PASSWORD`
-- `ANDROID_KEY_PASSWORD`
-
-원칙:
-- `keystore` 파일은 저장소에 커밋하지 않습니다.
-- CI에서는 `ANDROID_KEYSTORE_BASE64` 같은 시크릿으로 복원합니다.
-
-## 데이터 / 개인정보
-- 게임 데이터는 브라우저 `localStorage`에 저장됩니다.
-- 서버로 개인정보를 수집하거나 전송하지 않습니다.
-- 자세한 정책은 [public/privacy.html](D:/Projects/Web/AIP_merge-to-rich/public/privacy.html), [PRIVACY_POLICY.md](D:/Projects/Web/AIP_merge-to-rich/docs/PRIVACY_POLICY.md)를 기준으로 봅니다.
-
-## 문서 맵
-현재 기준 문서:
-- [ONBOARDING.md](D:/Projects/Web/AIP_merge-to-rich/docs/ONBOARDING.md)
-- [ARCHITECTURE.md](D:/Projects/Web/AIP_merge-to-rich/docs/ARCHITECTURE.md)
-- [CHANGELOG.md](D:/Projects/Web/AIP_merge-to-rich/docs/CHANGELOG.md)
-- [ROADMAP.md](D:/Projects/Web/AIP_merge-to-rich/docs/ROADMAP.md)
-- [TROUBLESHOOTING.md](D:/Projects/Web/AIP_merge-to-rich/docs/TROUBLESHOOTING.md)
-- [PRIVACY_POLICY.md](D:/Projects/Web/AIP_merge-to-rich/docs/PRIVACY_POLICY.md)
-
-계획 문서:
-- [PHASE1_PLAN.md](D:/Projects/Web/AIP_merge-to-rich/docs/PHASE1_PLAN.md)
-- [PHASE1_TASKS.md](D:/Projects/Web/AIP_merge-to-rich/docs/PHASE1_TASKS.md)
-- [RETURN_REWARD_PLAN.md](D:/Projects/Web/AIP_merge-to-rich/docs/RETURN_REWARD_PLAN.md)
-
-재사용 / 템플릿 문서:
-- [ASSET_GUIDE.md](D:/Projects/Web/AIP_merge-to-rich/docs/ASSET_GUIDE.md)
-- [TEMPLATE_GUIDE.md](D:/Projects/Web/AIP_merge-to-rich/docs/TEMPLATE_GUIDE.md)
-- [STORE_LISTING.md](D:/Projects/Web/AIP_merge-to-rich/docs/STORE_LISTING.md)
-
-운영 기록 / 리포트:
-- [DEV_LOG_FULL.md](D:/Projects/Web/AIP_merge-to-rich/docs/DEV_LOG_FULL.md)
-- [BUG_ISSUE_REPORT.md](D:/Projects/Web/AIP_merge-to-rich/docs/BUG_ISSUE_REPORT.md)
-- [LIVE_STABILITY_CHECKLIST_2026-03-08.md](D:/Projects/Web/AIP_merge-to-rich/docs/LIVE_STABILITY_CHECKLIST_2026-03-08.md)
-- [AUTOMATION_SUMMARY_2026-03-08.md](D:/Projects/Web/AIP_merge-to-rich/docs/AUTOMATION_SUMMARY_2026-03-08.md)
+## 운영 메모
+- 라이브 서비스 단계에서는 기능 추가보다 저장 안정성, 보상 중복 방지, 기기별 레이아웃 안정성을 우선합니다.
+- 코드 수정이 있으면 `README`, `CHANGELOG`, `ARCHITECTURE`, `ROADMAP`, `PHASE1_TASKS`를 함께 갱신합니다.
