@@ -21,9 +21,10 @@ import {
     StoreModal,
     TimedRewardTray,
 } from './components';
+import { ACHIEVEMENTS } from './game/achievements';
 import { useGameStore } from './store/useGameStore';
 import { getClaimableMissionCountByMetrics } from './game/missions';
-import { ACHIEVEMENTS, COIN_LEVELS, MAX_MONEY } from './types/game';
+import { COIN_LEVELS, MAX_MONEY } from './types/game';
 
 type ModalType =
     | 'store'

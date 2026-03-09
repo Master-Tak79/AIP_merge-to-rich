@@ -21,9 +21,17 @@
 - 미션 정의(카테고리 cadence/조건/목표/보상)
 - 진행도/수령 가능 계산 로직
 
+### `src/game/achievements.ts`
+- 업적 정의(카테고리/티어/조건/보상/점수)
+- 업적 진행도 계산 + 레거시 랭크 계산
+
 ### `src/components/MissionModal.tsx`
 - 미션 카테고리별(일일/주간/마일스톤) 진행도/보상 수령 UI
 - 수령 가능 상태를 명시적으로 보여주는 메인 콘텐츠 확장 포인트
+
+### `src/components/AchievementModal.tsx`
+- 카테고리별 업적 섹션/진행도 UI
+- 레거시 랭크 카드와 카테고리 완료 요약 노출
 
 ### `src/store/persistence.ts`
 - persist partialize
